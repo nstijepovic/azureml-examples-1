@@ -151,7 +151,7 @@
 						<release>11</release> <!--or <release>10</release>-->
 						<archive>
 							<manifest>
-								<mainClass>com.microsoft.ml.experiment.MLFlowExperimentRunner</mainClass>
+								<mainClass>com.microsoft.ml.experiment.MLflowExperimentRunner</mainClass>
 							</manifest>
 						</archive>
 						<descriptorRefs>

@@ -1,0 +1,8 @@
+$schema: https://azuremlschemas.azureedge.net/latest/workspace.schema.json
+name: TeamWorkspace
+location: West Europe
+display_name: team-ml-workspace
+description: A workspace for training machine learning models
+tags:
+  purpose: training
+  team: ml-team
