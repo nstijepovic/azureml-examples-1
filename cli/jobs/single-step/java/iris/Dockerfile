@@ -1,14 +1,13 @@
 FROM mcr.microsoft.com/openjdk/jdk:11-ubuntu
 
-ARG MAVEN_VERSION=3.8.6
+ARG MAVEN_VERSION=3.8.5
 ARG USER_HOME_DIR="/root"
-ARG SHA=f790857f3b1f90ae8d16281f902c689e4f136ebe584aba45e4b1fa66c80cba826d3e0e52fdd04ed44b4c66f6d3fe3584a057c26dfcac544a60b301e6d0f91c26
+ARG SHA=89ab8ece99292476447ef6a6800d9842bbb60787b9b8a45c103aa61d2f205a971d8c3ddfb8b03e514455b4173602bd015e82958c0b3ddc1728a57126f773c743
 ARG BASE_URL=https://apache.osuosl.org/maven/maven-3/${MAVEN_VERSION}/binaries
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends curl git\
+    && apt-get install -y curl git \
     && rm -rf /var/lib/apt/lists/*
-
 
 RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
   && curl -fsSL -o /tmp/apache-maven.tar.gz ${BASE_URL}/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
@@ -20,8 +19,12 @@ RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
 ENV MAVEN_HOME /usr/share/maven
 ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
 
-COPY mvn-entrypoint.sh /usr/local/bin/mvn-entrypoint.sh
-COPY settings-docker.xml /usr/share/maven/ref/
+COPY ./src/main/resources/Docker/mvn-entrypoint.sh /usr/local/bin/mvn-entrypoint.sh
+COPY ./src/main/resources/Docker/settings-docker.xml /usr/share/maven/ref/
 
-ENTRYPOINT ["/usr/local/bin/mvn-entrypoint.sh"]
-CMD ["mvn"]
+COPY . /app/
+WORKDIR /app/
+
+RUN ls -la
+
+#RUN /usr/local/bin/mvn-entrypoint.sh mvn -f pom.xml clean compile assembly:single && java -jar target/iris-0.0.1-SNAPSHOT-jar-with-dependencies.jar

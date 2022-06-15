@@ -2,7 +2,7 @@ $schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
 code: ../iris
 command: >-
   mvn -f pom.xml clean compile assembly:single &&
-  java -jar target/iris-0.0.1-SNAPSHOT-jar-with-dependencies.jar 
+  LOGLEVEL=INFO java -jar target/iris-0.0.1-SNAPSHOT-jar-with-dependencies.jar 
 environment_variables:
   REGION: "WestEurope"
   TENANT_ID: "72f988bf-86f1-41af-91ab-2d7cd011db47"
@@ -21,7 +21,7 @@ environment:
     path: src/main/resources/Docker
     #azureml:java-env:1
 
-compute: cpu-cluster
+compute: azureml:location-example
 display_name: aml-mlflow-java-example
 experiment_name: aml-mlflow-java-example
 description: 

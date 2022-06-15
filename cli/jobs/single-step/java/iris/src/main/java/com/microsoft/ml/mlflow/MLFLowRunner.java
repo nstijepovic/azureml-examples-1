@@ -25,6 +25,8 @@ public class MLFLowRunner {
 
 		MlflowHostCredsProvider credsProvider = new BasicMlflowHostCreds(amlAuth.getTRACKING_URI(),
 				amlAuth.getAccessTokenFromUserCredentials());
+				System.out.println("URI: " + amlAuth.getTRACKING_URI()); 
+				System.out.println("token: " +amlAuth.getAccessTokenFromUserCredentials()); 
 		MlflowClient client = new MlflowClient(credsProvider);
 
 		return client;

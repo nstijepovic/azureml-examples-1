@@ -9,6 +9,7 @@ package com.microsoft.ml.experiment;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Optional;
 
 import org.apache.commons.io.FilenameUtils;
@@ -148,7 +149,11 @@ public class MlflowExperiment {
 
 		// Create a new tracked run in the above experiment
 		RunInfo runInfo = mlflowClient.createRun(experimentId);
+		System.out.println("experimentId = " + experimentId);
+
 		String runId = runInfo.getRunUuid();
+		System.out.println("runId = " + runId);
+	
 
 		runExperiment(mlflowClient, runId, model, experimentDataset);
 
@@ -186,11 +191,30 @@ public class MlflowExperiment {
 		mlflowClient.logMetric(runId, "precision", evaluateModel.precision());
 		mlflowClient.logMetric(runId, "recall", evaluateModel.recall());
 
-		String path = FilenameUtils.concat(System.getProperty("java.io.tmpdir"), "model.zip");
-
-		log.info("Saving model to tmp folder: " + path);
-		// model.save(new File(path), true);
-		// mlflowClient.logArtifact(runId, new File(path));
+		System.out.println("Working Directory = " + System.getProperty("user.dir"));
+		try {
+			File myFile = new File("./outputs/output.h5");
+			if (myFile.createNewFile()) {
+				System.out.println("File created: " + myFile.getName());
+			} else {
+				System.out.println("File already exists.");
+			}
+			model.save(myFile);
+			System.out.println("myFile: " + myFile.toString());
+			System.out.println("runId: " + runId);
+			//mlflowClient.logArtifact(runId, myFile); // work in progress 
+			// issues arise when Azure ML retrieves the shorthand instead of longhand synatx that is needed to create the uri
+		}
+		catch(IOException e) {
+			e.printStackTrace();
+		}
+		//model.save(myFile);
+		//model.save("tmp/model");
+		//mlflowClient.logArtifact(runId, new File(modelFile));
+		//model.save(new File(path1.toString()), true);
+		//modelPath = client.downloadArtifacts(runId, "javaml").getAbsolutePath();
+		//mlflowClient.logArtifact(runId);
+		//
 
 		log.info("****************Experiment finished********************");
 
